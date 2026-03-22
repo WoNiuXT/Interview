@@ -1,0 +1,73 @@
+server:
+  port: 8080
+
+spring:
+  # 数据源配置
+  datasource:
+    url: jdbc:postgresql://localhost:5432/interview_new
+    username: postgres
+    password: Wxt..941422
+    driver-class-name: org.postgresql.Driver
+
+  # JPA配置
+  jpa:
+    hibernate:
+      ddl-auto: validate
+    show-sql: false  # 改为false提升性能
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.PostgreSQLDialect
+        format_sql: false
+        jdbc:
+          batch_size: 20
+    open-in-view: false
+
+  # AI 配置
+  ai:
+    # 向量存储配置
+    vectorstore:
+      pgvector:
+        index-type: HNSW
+        distance-type: COSINE_DISTANCE
+        dimensions: 1536
+        initialize-schema: false
+
+    # DashScope (阿里云通义) 配置
+    dashscope:
+      api-key: ${DASHSCOPE_API_KEY}
+
+      # embedding向量嵌入模型
+      embedding:
+        options:
+          model: text-embedding-v4
+
+      # 聊天模型
+      chat:
+        options:
+          model: qwen-plus-2025-07-28
+          temperature: 0.7  # 添加温度参数
+
+  # ✅ 异步请求超时配置（和上面的jpa/ai平级）
+  mvc:
+    async:
+      request-timeout: 30000
+
+# 面试应用自定义配置
+interview:
+  materials:
+    base-path: classpath:面试相关资料/
+    chunk-size: 800  # 从1000降到800
+    batch-size: 10
+  rag:
+    top-k: 3
+    similarity-threshold: 0.5
+  voice:
+    sample-rate: 16000
+    format: pcm
+
+# 日志配置
+logging:
+  level:
+    com.ningcai.interview: INFO  # 从DEBUG改为INFO，减少日志输出
+    org.springframework.ai: WARN
+    org.springframework.jdbc: WARN
