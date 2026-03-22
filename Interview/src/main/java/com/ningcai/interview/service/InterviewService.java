@@ -96,7 +96,6 @@ public class InterviewService {
 
             ChatClient chatClient = chatClientBuilder.build();
             String questionsText = chatClient.prompt(prompt).call().content();
-            log.info("AI返回的原始问题文本: {}", questionsText);  // ✅ 添加这行
 
             // 4. 解析问题列表
             List<String> questions = new ArrayList<>();
